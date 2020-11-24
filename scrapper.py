@@ -18,8 +18,8 @@ if not API_KEY:
     exit(1)
 
 REQUEST_LIMIT = 1500  # Number of API requests to run
-MINIMUM_VIDEOS_TO_GET = 50  # The number of videos to get, unless limit is hit.
-SECONDS_BEFORE_RECORD_EXPIRATION = 180  # How many seconds a video should stay in redis.
+MINIMUM_VIDEOS_TO_GET = 100  # The number of videos to get, unless limit is hit.
+SECONDS_BEFORE_RECORD_EXPIRATION = 21600  # How many seconds a video should stay in redis.
 
 main_redis = redis.Redis(decode_responses=True, db=0)
 
