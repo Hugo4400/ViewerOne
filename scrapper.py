@@ -26,7 +26,7 @@ REQUEST_LIMIT = 1500  # Number of API requests to run
 MINIMUM_VIDEOS_TO_GET = 100  # The number of videos to get, unless limit is hit.
 SECONDS_BEFORE_RECORD_EXPIRATION = 21600  # How many seconds a video should stay in redis.
 
-main_redis = redis.Redis(decode_responses=True, db=0)
+redis_db = redis.Redis(decode_responses=True, db=0)
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
@@ -63,7 +63,7 @@ while requests_sent <= REQUEST_LIMIT or videos_grabbed < MINIMUM_VIDEOS_TO_GET:
                 for video in res['items']:
                     if int(video['statistics']['viewCount']) <= 0:
                         videos_grabbed += 1
-                        main_redis.setex(json.dumps(video), SECONDS_BEFORE_RECORD_EXPIRATION, time.time())
+                        redis_db.setex(json.dumps(video), SECONDS_BEFORE_RECORD_EXPIRATION, time.time())
 
             else:
                 logerror(res)
