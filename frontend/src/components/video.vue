@@ -1,17 +1,25 @@
 <template>
   <div class="yt-frame">
     <h1>VIDEO WILL GO HERE I SWEAR</h1>
+    <iframe v-if="video" src="{{video}}"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen>
+    </iframe>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Axios from 'axios';
-import config from '@/../config';
+
+const config = {
+  server: '127.0.0.1:5000',
+};
 
 @Component
 export default class Video extends Vue {
   error = false
+
+  video = false
 
   msg = ''
 
@@ -22,8 +30,10 @@ export default class Video extends Vue {
         if (!res.data.status) {
           this.error = true;
           this.msg = res.data.msg;
+        } else if (res.data.ttl > 0) {
+          this.video = res.data.fetched.items.id;
         } else {
-          // TODO: Handle the video here!
+          this.mounted();
         }
       } else {
         this.error = true;
