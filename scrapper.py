@@ -36,10 +36,10 @@ requests_sent = 0
 videos_grabbed = 0
 while requests_sent <= REQUEST_LIMIT or videos_grabbed < MINIMUM_VIDEOS_TO_GET:
 
-    random = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(3))
+    rand = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(3))
     request = youtube.search().list(
         type='video',
-        q=random,
+        q=rand,
         maxResults=50,
         part='snippet'
     )
@@ -47,7 +47,7 @@ while requests_sent <= REQUEST_LIMIT or videos_grabbed < MINIMUM_VIDEOS_TO_GET:
     searchResponse = request.execute()
     requests_sent += 1
 
-    if not searchResponse['error']:
+    if "error" not in searchResponse or not searchResponse['error']:
 
         for videos in searchResponse['items']:
             req = youtube.videos().list(
@@ -58,7 +58,7 @@ while requests_sent <= REQUEST_LIMIT or videos_grabbed < MINIMUM_VIDEOS_TO_GET:
             res = req.execute()
             requests_sent += 1
 
-            if not res['error']:
+            if "error" not in res or not res['error']:
 
                 for video in res['items']:
                     if int(video['statistics']['viewCount']) <= 0:
